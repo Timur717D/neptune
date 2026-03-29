@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model Flavor {
+  id       Int      @id @default(autoincrement())
+  name     String
+  hqds     Hqd[]
+  liquids  Liquid[]
+  snuses   Snus[]
+}
+
+model Color {
+  id         Int         @id @default(autoincrement())
+  name       String
+  pod_system PodSystem[]
+}
+
+model Hqd {
+  id               Int    @id @default(autoincrement())
+  name             String
+  description      String
+  image            String
+  price            Int
+  nikotin_strenth  Int
+  puffs            Int
+  flavorId         Int
+  flavor           Flavor @relation(fields: [flavorId], references: [id])
+}
+
+model Liquid {
+  id              Int    @id @default(autoincrement())
+  name            String
+  description     String
+  image           String
+  price           Int
+  nikotin_strenth Int
+  flavorId        Int
+  flavor          Flavor @relation(fields: [flavorId], references: [id])
+}
+
+model PodSystem {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  image       String
+  price       Int
+  colorId     Int
+  color       Color  @relation(fields: [colorId], references: [id])
+
+  @@map("pod_system")
+}
+
+model Coil {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  image       String
+  price       Int
+
+  @@map("coils")
+}
+
+model Battery {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  image       String
+  price       Int
+}
+
+model Snus {
+  id              Int    @id @default(autoincrement())
+  name            String
+  description     String
+  image           String
+  price           Int
+  nikotin_strenth Int
+  flavorId        Int
+  flavor          Flavor @relation(fields: [flavorId], references: [id])
+}
